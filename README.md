@@ -36,6 +36,40 @@ Desktop notifications and the beep are off by default (`actions.notify`, `action
 - **Snapshots are off by default.** With `actions.snapshot_on_lock = true`, a photo of the
   onlooker is saved to `~/.shoulder_guard/snapshots/` when the PC locks.
 
+## Quick start
+
+1. **Get the code**
+   ```bash
+   git clone https://github.com/Siddhu290/Onlook.git
+   cd Onlook
+   ```
+2. **Install** (Python 3.9+)
+   ```bash
+   python3 -m venv .venv
+   .venv/bin/pip install -e ".[tray]"
+   ```
+3. **Check your setup** (camera, models, lock method)
+   ```bash
+   .venv/bin/shoulder-guard doctor
+   ```
+4. **Teach it your face.** Sit alone in front of the webcam for about 10 seconds:
+   ```bash
+   .venv/bin/shoulder-guard enroll
+   ```
+5. **Test without locking.** A debug window opens. Ask someone to look over your shoulder:
+   their box turns red.
+   ```bash
+   .venv/bin/shoulder-guard run --preview --dry-run
+   ```
+6. **Run it for real**
+   ```bash
+   .venv/bin/shoulder-guard run
+   ```
+7. **Optional: start at login**
+   ```bash
+   .venv/bin/shoulder-guard install-autostart
+   ```
+
 ## Install
 
 ```bash
@@ -118,6 +152,21 @@ shoulder-guard uninstall-autostart
 
 The entry runs the exact Python that installed it (your venv), so the venv doesn't need activating.
 Logs go to `~/.shoulder_guard/shoulder_guard.log` (rotating).
+
+## Docker (Linux)
+
+```bash
+xhost +local:docker                                   # once per login: let the container open windows
+docker compose build
+docker compose run --rm shoulder-guard enroll         # teach it your face
+docker compose run --rm shoulder-guard run --preview --dry-run
+docker compose up                                     # run
+```
+
+The container uses the host webcam (`/dev/video0`) and display. Enrollment, config and models
+are stored in `~/.shoulder_guard` on the host, so they survive rebuilds.
+**A container can't lock the host screen.** Use Docker to try the app out. For real protection,
+install it natively as in [Quick start](#quick-start).
 
 ## Development
 
