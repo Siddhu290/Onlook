@@ -1,0 +1,61 @@
+# ShoulderGuard configuration.
+# Every tunable value lives here. CLI: `--set section.key=value` overrides any of them.
+
+[timing]
+warn_after = 1.0        # seconds a stranger must look before you get a notification
+lock_after = 2.0        # seconds a stranger must look before the PC locks (> warn_after)
+grace = 0.8             # detection gap tolerated before a "watching" episode ends
+cooldown = 15.0         # seconds after a lock during which nothing triggers
+away_lock = 0.0         # lock when YOU are gone this long (needs enrollment); 0 = off
+fps = 10.0              # frames analysed per second
+
+[detection]
+score_threshold = 0.75  # YuNet face confidence; raise if objects are seen as faces
+nms_threshold = 0.3     # YuNet non-max suppression overlap
+top_k = 50              # YuNet max candidate faces
+min_face_px = 32        # ignore faces smaller than this (far away); raise to ignore distant people
+max_yaw = 0.6           # head turn still counted as "looking" (0.6 ~ 30 deg); lower = stricter
+pitch_min = 0.15        # nose position: smaller = looking up. Below this = not looking
+pitch_max = 1.0         # bigger = looking down. Above this = not looking
+
+[identity]
+match_threshold = 0.38  # cosine similarity to count as YOU; lower if you are flagged as a stranger
+enroll_samples = 40     # samples captured per enrollment
+min_enroll_samples = 10 # enrollment fails with fewer than this
+enroll_interval = 0.2   # min seconds between enrollment captures
+enroll_timeout = 90.0   # give up enrolling after this many seconds
+owner_votes_window = 7  # frames voted on for "is this you"
+look_votes_window = 5   # frames voted on for "is this face looking"
+track_ttl = 1.0         # seconds a face track survives without a detection
+iou_match = 0.25        # box overlap needed to continue a track
+
+[camera]
+index = 0
+width = 640
+height = 480
+reconnect_after_failures = 30   # consecutive bad reads before "camera unavailable"
+retry_seconds = 3.0             # wait between reconnect attempts
+
+[actions]
+notify = false            # desktop notifications (off: the tray cat shows it)
+beep = false
+lock = true
+snapshot_on_lock = false   # save a photo of the onlooker to <home>/snapshots (opt-in)
+dry_run = false            # log "would lock" instead of locking
+command_timeout = 5.0      # seconds to wait for each OS lock/notify command
+
+[cover]
+on_lock = "os"          # what a lock does: "blur" = frosted full-screen cover, dismissed only by
+                        # your keyword (set it with `shoulder-guard set-keyword`); "os" = OS lock screen
+cat_on_warn = false     # show the cat "Someone is watching!" badge while a stranger looks
+
+[logging]
+level = "INFO"
+max_bytes = 1000000
+backup_count = 3
+
+[tray]
+pause_minutes = 15.0
+
+[paths]
+home = "~/.shoulder_guard"

@@ -1,0 +1,12 @@
+# Needs host webcam + X display. Run `xhost +local:docker` once on the host.
+services:
+  shoulder-guard:
+    build: .
+    devices:
+      - /dev/video0:/dev/video0
+    environment:
+      - DISPLAY=${DISPLAY}
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - ${HOME}/.shoulder_guard:/root/.shoulder_guard
+    command: ["run"]

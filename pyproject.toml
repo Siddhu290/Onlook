@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "shoulder-guard"
+version = "1.0.0"
+description = "Lock your PC when someone else is reading your screen. 100% local."
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "opencv-python>=4.8,<5",
+    "numpy",
+    "tomli>=2; python_version < '3.11'",
+    "plyer; sys_platform == 'win32'",
+]
+
+[project.optional-dependencies]
+tray = ["pystray", "Pillow"]
+dev = ["pytest", "ruff"]
+
+[project.scripts]
+shoulder-guard = "shoulder_guard.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["shoulder_guard*"]
+
+[tool.setuptools.package-data]
+shoulder_guard = ["default_config.toml"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+extend-exclude = ["reference", ".venv"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]
